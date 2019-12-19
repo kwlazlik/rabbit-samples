@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 using RabbitMQ.Client;
 
+// ReSharper disable FunctionNeverReturns
 // ReSharper disable ArgumentsStyleNamedExpression
 // ReSharper disable ArgumentsStyleLiteral
 // ReSharper disable ArgumentsStyleStringLiteral
@@ -13,7 +15,7 @@ namespace RabbitSamples.TopicExchange.Producer
 {
    internal class Program
    {
-      public static void Main()
+      public static async Task Main()
       {
          ConnectionFactory factory = new ConnectionFactory();
 
@@ -53,7 +55,7 @@ namespace RabbitSamples.TopicExchange.Producer
 
             Console.WriteLine("Message sent: {0}", message);
 
-            Thread.Sleep(1000);
+            await Task.Delay(1000);
          }
       }
    }

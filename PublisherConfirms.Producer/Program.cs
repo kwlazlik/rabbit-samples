@@ -11,15 +11,16 @@ namespace PublisherConfirms
 {
    internal class Program
    {
-      private const int MESSAGE_COUNT = 9000;
+      private const int MessageCount = 5000;
+      private const double MessageSizeMb = 1;
 
       public static void Main()
       {
-         //PublishMessages();
-         HandlePublishConfirmsAsynchronously();
+         PublishAndConfirmSync();
+         PublishAndConfirmAsync();
       }
 
-      private static void PublishMessages()
+      private static void PublishAndConfirmSync()
       {
          using IConnection connection = new ConnectionFactory().CreateConnection();
          using IModel channel = connection.CreateModel();
@@ -27,29 +28,25 @@ namespace PublisherConfirms
          string queueName = channel.QueueDeclare().QueueName;
          channel.ConfirmSelect();
 
-         byte[] body = GetMessageBody(128.0);
+         byte[] body = GetMessageBody(MessageSizeMb);
 
          var timer = Stopwatch.StartNew();
 
-         for (var i = 0; i < 1; i++)
+         for (var i = 0; i < MessageCount; i++)
          {
             channel.BasicPublish("", queueName, null, body);
          }
 
-         Stopwatch sw = Stopwatch.StartNew();
-
-         bool noNack = channel.WaitForConfirms(new TimeSpan(0, 0, 0, 0, 200), out bool timedOut);
-         //channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 0, 1, 1));
-
-         sw.Stop();
-         long miliseconds = sw.ElapsedMilliseconds;
+         bool noNack = channel.WaitForConfirms(new TimeSpan(0, 0, 0, 0, 10), out bool timedOut);
+         //channel.WaitForConfirmsOrDie(new TimeSpan(0, 0, 0, 0, 10));
 
          timer.Stop();
 
-         Console.WriteLine($"Published {MESSAGE_COUNT:N0} messages individually in {timer.ElapsedMilliseconds:N0} ms");
+         Console.WriteLine($"-- Published {MessageCount:N0} messages individually in {timer.ElapsedMilliseconds:N0} ms");
+         Console.Read();
       }
 
-      private static void HandlePublishConfirmsAsynchronously()
+      private static void PublishAndConfirmAsync()
       {
          using IConnection connection = new ConnectionFactory().CreateConnection();
          using IModel channel = connection.CreateModel();
@@ -63,11 +60,9 @@ namespace PublisherConfirms
          {
             if (multiple)
             {
-               IEnumerable<KeyValuePair<ulong, string>> confirmed = outstandingConfirms.Where(k => k.Key <= sequenceNumber);
-
-               foreach (KeyValuePair<ulong, string> entry in confirmed)
+               foreach (KeyValuePair<ulong, string> kv in outstandingConfirms.Where(k => k.Key <= sequenceNumber))
                {
-                  outstandingConfirms.TryRemove(entry.Key, out _);
+                  outstandingConfirms.TryRemove(kv.Key, out _);
                }
             }
             else
@@ -85,15 +80,15 @@ namespace PublisherConfirms
             CleanOutstandingConfirms(ea.DeliveryTag, ea.Multiple);
          };
 
-         byte[] body = GetMessageBody(10);
+         byte[] messageBody = GetMessageBody(MessageSizeMb);
 
          var timer = new Stopwatch();
          timer.Start();
 
-         for (var i = 0; i < MESSAGE_COUNT; i++)
+         for (var i = 0; i < MessageCount; i++)
          {
             outstandingConfirms.TryAdd(channel.NextPublishSeqNo, i.ToString());
-            channel.BasicPublish("", queueName, null, body);
+            channel.BasicPublish("", queueName, null, messageBody);
          }
 
          if (!WaitUntil(1, () => outstandingConfirms.IsEmpty))
@@ -102,7 +97,9 @@ namespace PublisherConfirms
          }
 
          timer.Stop();
-         Console.WriteLine($"Published {MESSAGE_COUNT:N0} messages and handled confirm asynchronously {timer.ElapsedMilliseconds:N0} ms");
+
+         Console.WriteLine($"-- Published {MessageCount:N0} messages and handled confirm asynchronously {timer.ElapsedMilliseconds:N0} ms");
+         Console.Read();
       }
 
       private static byte[] GetMessageBody(double megaBytes)

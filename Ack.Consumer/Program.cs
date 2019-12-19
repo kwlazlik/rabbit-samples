@@ -5,6 +5,7 @@ using System.Threading;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
+// ReSharper disable AccessToDisposedClosure
 // ReSharper disable ArgumentsStyleNamedExpression
 // ReSharper disable ArgumentsStyleLiteral
 // ReSharper disable ArgumentsStyleStringLiteral
@@ -21,7 +22,7 @@ namespace RabbitSamples.Ack.Consumer
 
          using IModel channel = connection.CreateModel();
 
-         channel.QueueDeclare(queue: "durable_queue", durable: true, exclusive: false, autoDelete: false, arguments: null);
+         channel.QueueDeclare(queue: "durable-queue", durable: true, exclusive: false, autoDelete: false, arguments: null);
 
          channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
 
@@ -34,16 +35,14 @@ namespace RabbitSamples.Ack.Consumer
             byte[] body = ea.Body;
             string message = Encoding.UTF8.GetString(body);
 
-            Console.WriteLine("-- Receiving message: {0}", message);
+            Thread.Sleep(2500);
 
-            Thread.Sleep(5000);
-
-            Console.WriteLine("-- Message received");
+            Console.WriteLine("-- Message received: {0}", message);
 
             channel.BasicAck(ea.DeliveryTag, multiple: false);
          };
 
-         channel.BasicConsume(queue: "durable_queue", autoAck: false, consumer);
+         channel.BasicConsume(queue: "durable-queue", autoAck: false, consumer);
 
          Console.ReadLine();
       }
