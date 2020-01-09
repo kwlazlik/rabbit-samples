@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 using RabbitMQ.Client;
@@ -13,17 +12,18 @@ using RabbitMQ.Client;
 
 namespace RabbitSamples.TopicExchange.Producer
 {
-   internal class Program
+   internal static class Program
    {
+      private static readonly Random Random = new Random();
+
       public static async Task Main()
       {
-         ConnectionFactory factory = new ConnectionFactory();
+         var factory = new ConnectionFactory();
 
          using IConnection connection = factory.CreateConnection();
-
          using IModel channel = connection.CreateModel();
 
-         channel.ExchangeDeclare(exchange: "topic_logs", type: ExchangeType.Topic);
+         channel.ExchangeDeclare(exchange: "topic-exchange", type: ExchangeType.Topic, durable: false, autoDelete: false, arguments: null);
 
          string[] colors =
          {
@@ -48,25 +48,17 @@ namespace RabbitSamples.TopicExchange.Producer
          while (true)
          {
             string routingKey = $"{colors.Pick()}.{taste.Pick()}.{vegetables.Pick()}";
-            string message = $"New fresh {routingKey.Replace('.', ' ')}";
+            string message = $"New fresh {routingKey.Replace('.', ' ')} {DateTime.Now:o}";
             byte[] body = Encoding.UTF8.GetBytes(message);
 
-            channel.BasicPublish(exchange: "topic_logs", routingKey: routingKey, basicProperties: null, body: body);
+            channel.BasicPublish(exchange: "topic-exchange", routingKey: routingKey, basicProperties: null, body: body);
 
-            Console.WriteLine("Message sent: {0}", message);
+            Console.WriteLine("-- Message sent: {0}", message);
 
-            await Task.Delay(1000);
+            await Task.Delay(Random.Next(500, 1000));
          }
       }
-   }
 
-   internal static class ListExtensions
-   {
-      private static readonly Random Random = new Random();
-
-      public static T Pick<T>(this IReadOnlyList<T> list)
-      {
-         return list[Random.Next(list.Count)];
-      }
+      public static T Pick<T>(this IReadOnlyList<T> list) => list[Random.Next(list.Count)];
    }
 }

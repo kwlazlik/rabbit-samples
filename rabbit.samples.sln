@@ -9,13 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorld.Consumer", "Hell
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01.HelloWorld", "01.HelloWorld", "{9F94B6F1-08B8-4306-B809-0D882311DB5A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02.Ack", "02.Ack", "{28106F0E-A4AA-4CC9-B454-37B6D12054D0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03.Ack", "03.Ack", "{28106F0E-A4AA-4CC9-B454-37B6D12054D0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ack.Consumer", "Ack.Consumer\Ack.Consumer.csproj", "{7287DD2E-304B-44D9-A98B-6F63D6BFF237}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ack.Producer", "Ack.Producer\Ack.Producer.csproj", "{EB6F64DA-37CC-4327-91E6-7C3E46E5B2CE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04.TopicExchange", "04.TopicExchange", "{2901DA4A-3044-402A-A584-2DED6C23827A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02.TopicExchange", "02.TopicExchange", "{2901DA4A-3044-402A-A584-2DED6C23827A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TopicExchange.Consumer", "TopicExchange.Consumer\TopicExchange.Consumer.csproj", "{4C99F56C-1DF8-4B8C-BF57-D1189FCF217E}"
 EndProject
@@ -23,7 +23,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TopicExchange.Producer", "T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PublisherConfirms.Producer", "PublisherConfirms.Producer\PublisherConfirms.Producer.csproj", "{500BB5C7-B840-418D-BEA9-98C97595F073}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03.PublisherConfirms", "03.PublisherConfirms", "{C9C71862-621A-4342-9AF7-4AB9B091F86B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04.PublisherConfirms", "04.PublisherConfirms", "{C9C71862-621A-4342-9AF7-4AB9B091F86B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeadLetters.Producer", "DeadLetters.Producer\DeadLetters.Producer.csproj", "{C64CD0C4-4C6E-4D23-9341-931A4DB8AB30}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeadLetters.Consumer", "DeadLetters.Consumer\DeadLetters.Consumer.csproj", "{314E4434-E772-4D0F-87CA-FB418C082DB4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05.DeadLetters", "05.DeadLetters", "{1BDA631A-FB36-4BF2-ACA1-F88641E9346A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,6 +65,14 @@ Global
 		{500BB5C7-B840-418D-BEA9-98C97595F073}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{500BB5C7-B840-418D-BEA9-98C97595F073}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{500BB5C7-B840-418D-BEA9-98C97595F073}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C64CD0C4-4C6E-4D23-9341-931A4DB8AB30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C64CD0C4-4C6E-4D23-9341-931A4DB8AB30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C64CD0C4-4C6E-4D23-9341-931A4DB8AB30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C64CD0C4-4C6E-4D23-9341-931A4DB8AB30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{314E4434-E772-4D0F-87CA-FB418C082DB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{314E4434-E772-4D0F-87CA-FB418C082DB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{314E4434-E772-4D0F-87CA-FB418C082DB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{314E4434-E772-4D0F-87CA-FB418C082DB4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,6 +85,8 @@ Global
 		{4C99F56C-1DF8-4B8C-BF57-D1189FCF217E} = {2901DA4A-3044-402A-A584-2DED6C23827A}
 		{A4E626E1-6DDE-4F66-AEC8-49A482ED6D44} = {2901DA4A-3044-402A-A584-2DED6C23827A}
 		{500BB5C7-B840-418D-BEA9-98C97595F073} = {C9C71862-621A-4342-9AF7-4AB9B091F86B}
+		{C64CD0C4-4C6E-4D23-9341-931A4DB8AB30} = {1BDA631A-FB36-4BF2-ACA1-F88641E9346A}
+		{314E4434-E772-4D0F-87CA-FB418C082DB4} = {1BDA631A-FB36-4BF2-ACA1-F88641E9346A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {24B82BE2-88FA-4B79-8D10-F2E914D20FDF}
