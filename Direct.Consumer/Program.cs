@@ -1,27 +1,29 @@
 ﻿using System;
 using System.Text;
 using System.Threading;
-
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace RabbitSamples.Ack.Consumer
+namespace RabbitSamples.Direct.Consumer
 {
    internal class Program
    {
+
       public static void Main()
       {
-         var factory = new ConnectionFactory();
+         var factory = new ConnectionFactory
+         {
+            UserName = ConnectionFactory.DefaultUser,
+            Password = ConnectionFactory.DefaultPass,
+            VirtualHost = ConnectionFactory.DefaultVHost,
+            HostName = "localhost",
+            Port = AmqpTcpEndpoint.UseDefaultPort
+         };
 
          using IConnection connection = factory.CreateConnection();
-
          using IModel channel = connection.CreateModel();
 
-         channel.QueueDeclare(queue: "durable-queue", durable: true, exclusive: false, autoDelete: false, arguments: null);
-
-         channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
-
-         Console.WriteLine("--- Waiting for messages ...");
+         channel.QueueDeclare(queue: "sample-direct-queue", durable: false, exclusive: false, autoDelete: false, arguments: null);
 
          var consumer = new EventingBasicConsumer(channel);
 
@@ -30,14 +32,10 @@ namespace RabbitSamples.Ack.Consumer
             ReadOnlyMemory<byte> body = ea.Body;
             string message = Encoding.UTF8.GetString(body.Span);
 
-            Thread.Sleep(2500);
-
             Console.WriteLine("--- Message received: {0}", message);
-
-            channel.BasicAck(ea.DeliveryTag, multiple: false);
          };
 
-         channel.BasicConsume(queue: "durable-queue", autoAck: false, consumer);
+         channel.BasicConsume(queue: "sample-direct-queue", autoAck: false, consumer: consumer);
 
          Console.WriteLine("--- Waiting for messages ...");
          Console.Read();

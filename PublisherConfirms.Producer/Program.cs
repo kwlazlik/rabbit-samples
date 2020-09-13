@@ -42,7 +42,7 @@ namespace PublisherConfirms
 
          timer.Stop();
 
-         Console.WriteLine($"-- Published {MessageCount:N0} messages individually in {timer.ElapsedMilliseconds:N0} ms");
+         Console.WriteLine($"--- Published {MessageCount:N0} messages individually in {timer.ElapsedMilliseconds:N0} ms");
          Console.Read();
       }
 
@@ -98,7 +98,7 @@ namespace PublisherConfirms
 
          timer.Stop();
 
-         Console.WriteLine($"-- Published {MessageCount:N0} messages and handled confirm asynchronously {timer.ElapsedMilliseconds:N0} ms");
+         Console.WriteLine($"--- Published {MessageCount:N0} messages and handled confirm asynchronously {timer.ElapsedMilliseconds:N0} ms");
          Console.Read();
       }
 

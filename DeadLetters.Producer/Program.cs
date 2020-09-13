@@ -5,19 +5,10 @@ using System.Threading.Tasks;
 
 using RabbitMQ.Client;
 
-// ReSharper disable RedundantBlankLines
-// ReSharper disable ArgumentsStyleOther
-// ReSharper disable FunctionNeverReturns
-// ReSharper disable ArgumentsStyleNamedExpression
-// ReSharper disable ArgumentsStyleLiteral
-// ReSharper disable ArgumentsStyleStringLiteral
-
 namespace RabbitSamples.DeadLetters.Producer
 {
    internal static class Program
    {
-      private static readonly Random Random = new Random();
-
       public static async Task Main()
       {
          var factory = new ConnectionFactory();
@@ -40,22 +31,54 @@ namespace RabbitSamples.DeadLetters.Producer
          channel.QueueBind(queue: "task-queue", exchange: "task-exchange", routingKey: "task-rk");
 
          channel.ExchangeDeclare("dl-exchange", type: "fanout", durable: false, autoDelete: false, arguments: null);
+
          channel.QueueDeclare("dl-queue", durable: false, exclusive: false, autoDelete: false, arguments: null);
+
          channel.QueueBind(queue: "dl-queue", exchange: "dl-exchange", routingKey: "");
 
          while (true)
          {
-            string rk = Random.Next() % 10 == 0 ? "invalid-rk" : "task-rk";
-
-            string message = $"Hello World! {rk} {DateTime.Now:o}";
+            (string message, string key) = PickMessageAndKey();
             byte[] body = Encoding.UTF8.GetBytes(message);
 
-            channel.BasicPublish(exchange: "task-exchange", routingKey: rk, basicProperties: null, body: body);
+            channel.BasicPublish(exchange: "task-exchange", routingKey: key, basicProperties: null, body: body);
 
-            Console.WriteLine("-- Message sent: {0}", message);
+            Console.WriteLine("--- Message sent: {0}", message);
 
-            await Task.Delay(Random.Next(500, 1000));
+            await Task.Delay(1000);
          }
+      }
+
+      private static readonly Random Random = new Random();
+
+      private static T Pick<T>(this IReadOnlyList<T> list) => list[Random.Next(list.Count)];
+
+      private static (string, string) PickMessageAndKey()
+      {
+         string[] colors =
+         {
+            "red",
+            "green",
+            "yellow"
+         };
+
+         string[] taste =
+         {
+            "sweet",
+            "spicy"
+         };
+
+         string[] vegetables =
+         {
+            "carrot",
+            "tomato",
+            "pepper"
+         };
+
+         string key = Random.Next() % 4 == 0 ? "invalid-key" : "valid-key";
+         string message = $"{colors.Pick()} {taste.Pick()} {vegetables.Pick()} {key} {DateTime.Now:HH:mm:ss.fff}";
+
+         return (message, key);
       }
    }
 }

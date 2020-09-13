@@ -3,8 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>RabbitSamples.Ack.Producer</AssemblyName>
-    <RootNamespace>RabbitSamples.Ack.Producer</RootNamespace>
+    <AssemblyName>RabbitSamples.Direct.Consumer</AssemblyName>
+    <RootNamespace>RabbitSamples.Direct.Consumer</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

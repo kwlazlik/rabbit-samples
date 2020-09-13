@@ -5,31 +5,34 @@ using System.Threading.Tasks;
 
 using RabbitMQ.Client;
 
-namespace RabbitSamples.Ack.Producer
+namespace RabbitSamples.HelloWorld.Producer
 {
    internal static class Program
    {
       public static async Task Main()
       {
-         var factory = new ConnectionFactory();
+         var factory = new ConnectionFactory
+         {
+            UserName = ConnectionFactory.DefaultUser,
+            Password = ConnectionFactory.DefaultPass,
+            VirtualHost = ConnectionFactory.DefaultVHost,
+            HostName = "localhost",
+            Port = AmqpTcpEndpoint.UseDefaultPort
+         };
 
          using IConnection connection = factory.CreateConnection();
-
          using IModel channel = connection.CreateModel();
 
-         channel.QueueDeclare(queue: "durable-queue", durable: true, exclusive: false, autoDelete: false, arguments: null);
-
-         IBasicProperties properties = channel.CreateBasicProperties();
-         properties.Persistent = true;
+         channel.QueueDeclare(queue: "sample-direct-queue", durable: false, exclusive: false, autoDelete: false, arguments: null);
 
          while (true)
          {
             string message = PickMessage();
-            byte[] body = Encoding.UTF8.GetBytes(s: message);
+            byte[] body = Encoding.UTF8.GetBytes(message);
 
-            channel.BasicPublish(exchange: "", routingKey: "durable-queue", basicProperties: properties, body: body);
+            channel.BasicPublish(exchange: "", routingKey: "sample-direct-queue", basicProperties: null, body: body);
 
-            Console.WriteLine(format: "--- Message sent: {0}", arg0: message);
+            Console.WriteLine($"--- Message sent: {message}");
 
             await Task.Delay(2000);
          }
