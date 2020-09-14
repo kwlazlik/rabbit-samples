@@ -2,32 +2,36 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+
 using RabbitMQ.Client;
 
-namespace RabbitSamples.TopicExchange.Producer
+namespace RabbitSamples.Ack.Producer
 {
-   internal static class Program
+   internal static class AckProducer
    {
       public static async Task Main()
       {
          var factory = new ConnectionFactory();
 
-         using var connection = factory.CreateConnection();
-         using var channel = connection.CreateModel();
+         using IConnection connection = factory.CreateConnection();
 
-         channel.ExchangeDeclare("sample-topic-exchange", ExchangeType.Topic, false, false, null);
+         using IModel channel = connection.CreateModel();
+
+         channel.QueueDeclare(queue: "durable-queue", durable: true, exclusive: false, autoDelete: false, arguments: null);
+
+         IBasicProperties properties = channel.CreateBasicProperties();
+         properties.Persistent = true;
 
          while (true)
          {
-            (string message, string key) = PickMessageAndKey();
+            string message = PickMessage();
+            byte[] body = Encoding.UTF8.GetBytes(s: message);
 
-            var body = Encoding.UTF8.GetBytes(message);
-
-            channel.BasicPublish("sample-topic-exchange", key, null, body);
+            channel.BasicPublish(exchange: "", routingKey: "durable-queue", basicProperties: properties, body: body);
 
             Console.WriteLine("--- Message sent: {0}", message);
 
-            await Task.Delay(Random.Next(2500, 5000));
+            await Task.Delay(3000);
          }
       }
 
@@ -35,7 +39,7 @@ namespace RabbitSamples.TopicExchange.Producer
 
       private static T Pick<T>(this IReadOnlyList<T> list) => list[Random.Next(list.Count)];
 
-      private static (string, string) PickMessageAndKey()
+      private static string PickMessage()
       {
          string[] colors =
          {
@@ -57,11 +61,7 @@ namespace RabbitSamples.TopicExchange.Producer
             "pepper"
          };
 
-         var key = $"{colors.Pick()}.{taste.Pick()}.{vegetables.Pick()}";
-
-         var message = $"{key.Replace('.', ' ')} {DateTime.Now:HH:mm:ss.fff}";
-
-         return (message, key);
+         return $"{colors.Pick()} {taste.Pick()} {vegetables.Pick()} {DateTime.Now:HH:mm:ss.fff}";
       }
    }
 }

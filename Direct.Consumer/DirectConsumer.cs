@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Text;
-using System.Threading;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 namespace RabbitSamples.Direct.Consumer
 {
-   internal class Program
+   internal static class DirectConsumer
    {
-
       public static void Main()
       {
          var factory = new ConnectionFactory
@@ -35,7 +33,7 @@ namespace RabbitSamples.Direct.Consumer
             Console.WriteLine("--- Message received: {0}", message);
          };
 
-         channel.BasicConsume(queue: "sample-direct-queue", autoAck: false, consumer: consumer);
+         channel.BasicConsume(queue: "sample-direct-queue", autoAck: true, consumer: consumer);
 
          Console.WriteLine("--- Waiting for messages ...");
          Console.Read();

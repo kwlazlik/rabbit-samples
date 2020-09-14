@@ -7,7 +7,7 @@ using RabbitMQ.Client.Events;
 
 namespace RabbitSamples.DeadLetters.Consumer
 {
-   internal static class Program
+   internal static class DeadLettersConsumer
    {
       private static readonly Random Random = new Random();
 

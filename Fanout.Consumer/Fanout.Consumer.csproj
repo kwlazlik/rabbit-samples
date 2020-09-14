@@ -3,8 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>RabbitSamples.Fanout.Consummer</AssemblyName>
-    <RootNamespace>RabbitSamples.Fanout.Consummer</RootNamespace>
+    <AssemblyName>RabbitSamples.Fanout.Consumer</AssemblyName>
+    <RootNamespace>RabbitSamples.Fanout.Consumer</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

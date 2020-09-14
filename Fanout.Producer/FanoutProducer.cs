@@ -2,39 +2,31 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-
 using RabbitMQ.Client;
 
-namespace RabbitSamples.HelloWorld.Producer
+namespace RabbitSamples.Fanout.Producer
 {
-   internal static class Program
+   internal static class FanoutProducer
    {
-      public static async Task Main()
+      public static async Task Main(string[] args)
       {
-         var factory = new ConnectionFactory
-         {
-            UserName = ConnectionFactory.DefaultUser,
-            Password = ConnectionFactory.DefaultPass,
-            VirtualHost = ConnectionFactory.DefaultVHost,
-            HostName = "localhost",
-            Port = AmqpTcpEndpoint.UseDefaultPort
-         };
+         var factory = new ConnectionFactory();
 
          using IConnection connection = factory.CreateConnection();
          using IModel channel = connection.CreateModel();
 
-         channel.QueueDeclare(queue: "sample-direct-queue", durable: false, exclusive: false, autoDelete: false, arguments: null);
+         channel.ExchangeDeclare(exchange: "sample-fanout-exchange", type: ExchangeType.Fanout);
 
          while (true)
          {
             string message = PickMessage();
-            byte[] body = Encoding.UTF8.GetBytes(message);
+            var body = Encoding.UTF8.GetBytes(message);
 
-            channel.BasicPublish(exchange: "", routingKey: "sample-direct-queue", basicProperties: null, body: body);
+            channel.BasicPublish(exchange: "sample-fanout-exchange", routingKey: "", basicProperties: null, body: body);
 
             Console.WriteLine($"--- Message sent: {message}");
 
-            await Task.Delay(2000);
+            await Task.Delay(3000);
          }
       }
 

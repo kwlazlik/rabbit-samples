@@ -7,7 +7,7 @@ using RabbitMQ.Client;
 
 namespace RabbitSamples.DeadLetters.Producer
 {
-   internal static class Program
+   internal static class DeadLettersProducer
    {
       public static async Task Main()
       {
@@ -45,7 +45,7 @@ namespace RabbitSamples.DeadLetters.Producer
 
             Console.WriteLine("--- Message sent: {0}", message);
 
-            await Task.Delay(1000);
+            await Task.Delay(3000);
          }
       }
 

@@ -5,7 +5,7 @@ using RabbitMQ.Client.Events;
 
 namespace RabbitSamples.Topic.Consumer
 {
-   internal static class Program
+   internal static class TopicConsumer
    {
       public static void Main()
       {
@@ -20,7 +20,7 @@ namespace RabbitSamples.Topic.Consumer
 
          string key = PickKey();
 
-         channel.QueueBind(queue: queueName, exchange: "topic-exchange", routingKey: key);
+         channel.QueueBind(queue: queueName, exchange: "sample-topic-exchange", routingKey: key);
 
          Console.WriteLine($"--- Waiting for messages matches: {key}");
 

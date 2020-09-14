@@ -33,7 +33,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06.DeadLetters", "06.DeadLe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanout.Producer", "Fanout.Producer\Fanout.Producer.csproj", "{984E9BDE-00A7-4012-9199-DFD017FF8FE1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanout.Consummer", "Fanout.Consummer\Fanout.Consummer.csproj", "{034581F5-D494-4DA8-B0C5-C265ED07D75A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fanout.Consumer", "Fanout.Consumer\Fanout.Consumer.csproj", "{034581F5-D494-4DA8-B0C5-C265ED07D75A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02.Fanout", "02.Fanout", "{83C763EE-6978-45DC-A9F4-73A5B93739E3}"
 EndProject

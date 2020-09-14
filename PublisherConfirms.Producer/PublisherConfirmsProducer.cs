@@ -4,12 +4,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-
 using RabbitMQ.Client;
 
-namespace PublisherConfirms
+namespace RabbitSamples.PublisherConfirms.Producer
 {
-   internal class Program
+   internal static class PublisherConfirmsProducer
    {
       private const int MessageCount = 5000;
       private const double MessageSizeMb = 1;

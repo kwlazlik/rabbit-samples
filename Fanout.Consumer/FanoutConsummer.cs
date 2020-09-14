@@ -3,9 +3,9 @@ using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace RabbitSamples.Fanout.Consummer
+namespace RabbitSamples.Fanout.Consumer
 {
-   class Program
+   internal static class FanoutConsumer
    {
       public static void Main()
       {
@@ -26,9 +26,11 @@ namespace RabbitSamples.Fanout.Consummer
             string message = Encoding.UTF8.GetString(body);
 
             Console.WriteLine("--- Message received: {0}", message);
+
+            channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
          };
 
-         channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
+         channel.BasicConsume(queue: queueName, autoAck: false, consumer: consumer);
 
          Console.WriteLine("--- Waiting for messages ...");
          Console.Read();

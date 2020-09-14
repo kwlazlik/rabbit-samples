@@ -7,7 +7,7 @@ using RabbitMQ.Client.Events;
 
 namespace RabbitSamples.Ack.Consumer
 {
-   internal class Program
+   internal static class AckConsumer
    {
       public static void Main()
       {
@@ -34,7 +34,7 @@ namespace RabbitSamples.Ack.Consumer
 
             Console.WriteLine("--- Message received: {0}", message);
 
-            channel.BasicAck(ea.DeliveryTag, multiple: false);
+            channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
          };
 
          channel.BasicConsume(queue: "durable-queue", autoAck: false, consumer);

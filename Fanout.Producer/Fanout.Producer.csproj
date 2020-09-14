@@ -3,6 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>RabbitSamples.Fanout.Producer</AssemblyName>
+    <RootNamespace>RabbitSamples.Fanout.Producer</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
