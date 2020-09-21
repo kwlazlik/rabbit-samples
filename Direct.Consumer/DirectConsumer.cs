@@ -9,28 +9,21 @@ namespace RabbitSamples.Direct.Consumer
    {
       public static void Main()
       {
-         var factory = new ConnectionFactory
-         {
-            UserName = ConnectionFactory.DefaultUser,
-            Password = ConnectionFactory.DefaultPass,
-            VirtualHost = ConnectionFactory.DefaultVHost,
-            HostName = "localhost",
-            Port = AmqpTcpEndpoint.UseDefaultPort
-         };
+         var factory = new ConnectionFactory();
 
          using IConnection connection = factory.CreateConnection();
          using IModel channel = connection.CreateModel();
 
-         channel.QueueDeclare(queue: "sample-direct-queue", durable: false, exclusive: false, autoDelete: false, arguments: null);
+         channel.QueueDeclare(queue: "sample-direct-queue", durable: false, exclusive: false, autoDelete: true, arguments: null);
 
          var consumer = new EventingBasicConsumer(channel);
 
-         consumer.Received += (model, ea) =>
+         consumer.Received += (model, message) =>
          {
-            ReadOnlyMemory<byte> body = ea.Body;
-            string message = Encoding.UTF8.GetString(body.Span);
+            ReadOnlyMemory<byte> body = message.Body;
+            string messageText = Encoding.UTF8.GetString(body.Span);
 
-            Console.WriteLine("--- Message received: {0}", message);
+            Console.WriteLine("--- Message received: {0}", messageText);
          };
 
          channel.BasicConsume(queue: "sample-direct-queue", autoAck: true, consumer: consumer);

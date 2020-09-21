@@ -10,30 +10,21 @@ namespace RabbitSamples.Direct.Producer
    {
       public static async Task Main()
       {
-         var factory = new ConnectionFactory
-         {
-            UserName = ConnectionFactory.DefaultUser,
-            Password = ConnectionFactory.DefaultPass,
-            VirtualHost = ConnectionFactory.DefaultVHost,
-            HostName = "localhost",
-            Port = AmqpTcpEndpoint.UseDefaultPort,
-            ClientProvidedName = "direct-producer"
-
-         };
+         var factory = new ConnectionFactory();
 
          using IConnection connection = factory.CreateConnection();
          using IModel channel = connection.CreateModel();
 
-         channel.QueueDeclare(queue: "sample-direct-queue", durable: false, exclusive: false, autoDelete: false, arguments: null);
+         channel.QueueDeclare(queue: "sample-direct-queue", durable: false, exclusive: false, autoDelete: true, arguments: null);
 
          while (true)
          {
-            string message = PickMessage();
-            byte[] body = Encoding.UTF8.GetBytes(message);
+            string messageText = PickMessage();
+            byte[] body = Encoding.UTF8.GetBytes(messageText);
 
             channel.BasicPublish(exchange: "", routingKey: "sample-direct-queue", basicProperties: null, body: body);
 
-            Console.WriteLine($"--- Message sent: {message}");
+            Console.WriteLine($"--- Message sent: {messageText}");
 
             await Task.Delay(3000);
          }
