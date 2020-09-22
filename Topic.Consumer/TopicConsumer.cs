@@ -40,7 +40,7 @@ namespace RabbitSamples.Topic.Consumer
          Console.Read();
       }
 
-      private static readonly Random Random = new Random();
+      private static readonly Random Random = new Random(123);
 
       private static string PickKey()
       {

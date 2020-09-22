@@ -31,7 +31,7 @@ namespace RabbitSamples.Topic.Producer
          }
       }
 
-      private static readonly Random Random = new Random();
+      private static readonly Random Random = new Random(123);
 
       private static T Pick<T>(this IReadOnlyList<T> list) => list[Random.Next(list.Count)];
 
